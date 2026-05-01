@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: auth_service_postgres
+    environment:
+      POSTGRES_DB: auth_service_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: AuthPassword
+
+    ports:
+      - "5437:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pg_data:
