@@ -1,11 +1,15 @@
 package com.rwanda_dash.auth_service.dtos;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class LocationDto {
-    private double latitude;
-    private double longitude;
+    @NotNull(message = "Latitude is required")
+    private Double latitude;
+
+    @NotNull(message = "Longitude is required")
+    private Double longitude;
 }
 
 

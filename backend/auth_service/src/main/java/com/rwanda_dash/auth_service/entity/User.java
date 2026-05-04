@@ -1,6 +1,7 @@
 package com.rwanda_dash.auth_service.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,10 +19,15 @@ public class User {
     @JoinColumn(name = "tenant_id")
     private Tenant tenantId;
     
-    private String firstName; // translated to first_name
-    private String lastName;  // translated to last_name
+    @Valid
+    private String firstName; 
+    @Valid
+    private String lastName;  
+    @Valid
     private String email;
+    @Valid
     private String phone;
+    @Valid
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;

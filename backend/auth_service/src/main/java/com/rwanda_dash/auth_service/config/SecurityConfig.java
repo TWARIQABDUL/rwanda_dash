@@ -26,7 +26,7 @@ public class SecurityConfig {
             
             // 3. The Rules: Open up our Auth endpoints, but lock down absolutely everything else
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/register/**", "/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()
             );
 
