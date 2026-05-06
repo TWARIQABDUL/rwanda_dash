@@ -28,47 +28,22 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register/platform-admin")
-    public ResponseEntity<?> registerPlatformAdmin(@Valid @RequestBody RegisterTenantDto registerTenantDto) {
+    public ResponseEntity<TenantRegisterResponse> registerPlatformAdmin(@Valid @RequestBody RegisterTenantDto registerTenantDto) {
         log.info("Registering platform with data: {}", registerTenantDto);
-        
-       
-        try {
-
-            TenantRegisterResponse response = authService.registerPlatform(registerTenantDto);
-            return ResponseEntity.status(200).body(response);
-
-        } catch (Exception e) {
-
-
-            return ResponseEntity.badRequest().body(
-                new TenantRegisterResponse(e.getMessage(), "error"));
-        }
+        TenantRegisterResponse response = authService.registerPlatform(registerTenantDto);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyTenant(@RequestBody Map<String,String> reqToken){
-        try {
-            TenantRegisterResponse response = authService.verifyTenant(reqToken.get("token"));
-
-            return ResponseEntity.status(200).body(response);
-        } catch (Exception e) {
-
-            return ResponseEntity.status(400).body(
-                new TenantRegisterResponse("Invalid Token "+e.getMessage(), "error"));
-            // TODO: handle exception
-        }
-
-        
+    public ResponseEntity<TenantRegisterResponse> verifyTenant(@RequestBody Map<String,String> reqToken){
+        TenantRegisterResponse response = authService.verifyTenant(reqToken.get("token"));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            LoginResponse response = authService.login(request);
-            return ResponseEntity.status(200).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body(new LoginResponse(e.getMessage(), "", "", null));
-        }
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 
 

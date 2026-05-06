@@ -148,23 +148,18 @@ public class AuthService {
             );
             return response;
         } catch (Exception e) {
-           TenantRegisterResponse response = new TenantRegisterResponse(
-                "Tenant verified failed "+e.getMessage(),
-                Tenant.Status.INACTIVE.toString()
-            );
-            log.error("Tenant verification failed with email");
-            return response;
-            
+            log.error("Tenant verification failed", e);
+            throw new RuntimeException("Invalid or expired verification token");
         }
     }
 
     @Transactional
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + request.getEmail()));
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
         
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new RuntimeException("Invalid email or password");
         }
         Map<String,Object> claims = new HashMap<>();
         claims.put("user_id", user.getId());
@@ -174,7 +169,7 @@ public class AuthService {
             claims.put("tenant_id", user.getTenantId().getId());
         }
         if (user.getStatus() == User.Status.INACTIVE) {
-            throw new RuntimeException("Account is not activated");
+            throw new RuntimeException("Account is not activated please check your email to verify your account");
         }
         
         String token = jwtService.generateToken(user);

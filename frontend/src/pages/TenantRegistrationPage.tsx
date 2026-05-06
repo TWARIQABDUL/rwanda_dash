@@ -90,7 +90,21 @@ export default function TenantRegistrationPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to register tenant");
+        let errorMessage = "Failed to register tenant";
+        try {
+          const errorData = await response.json();
+          if (errorData.validationErrors) {
+            const errors = Object.entries(errorData.validationErrors)
+              .map(([field, msg]) => `${field.split('.').pop()}: ${msg}`)
+              .join(", ");
+            errorMessage = `${errorData.message} - ${errors}`;
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (parseErr) {
+          // Fallback if response isn't JSON
+        }
+        throw new Error(errorMessage);
       }
 
       setSuccess(true);
